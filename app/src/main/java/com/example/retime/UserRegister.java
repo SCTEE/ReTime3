@@ -1,5 +1,4 @@
 package com.example.retime;
-
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -9,10 +8,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 
-public class register extends AppCompatActivity {
+import android.os.Bundle;
+
+public class UserRegister extends AppCompatActivity {
     SQLiteOpenHelper openHelper;
     SQLiteDatabase db;
     Button _reg_btn;
@@ -21,8 +21,7 @@ public class register extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.register_page);
-
+        setContentView(R.layout.activity_user_register);
         openHelper = new DatabaseHelper(this);
         _reg_btn = (Button)findViewById(R.id.reg_btn);
         _user_reg = (EditText)findViewById(R.id.user_reg);
@@ -61,7 +60,6 @@ public class register extends AppCompatActivity {
         contentValues.put(DatabaseHelper.COL_4, password);
         contentValues.put(DatabaseHelper.COL_5, username);
         long id= db.insert(DatabaseHelper.TABLE_NAME, null, contentValues);
+
     }
-
-
 }

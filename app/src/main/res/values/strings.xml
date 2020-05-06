@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">ReTime</string>
+    <string name="facebook_app_id">245428906571274</string>
+    <string name="fb_login_protocol_scheme">fb245428906571274</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
