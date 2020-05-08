@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
@@ -62,25 +63,18 @@ public class home extends FragmentActivity implements TimeTableAdapter.OnFragmen
     public void onFragmentClick(int position) {
 
         Fragment Taskfrag = new Task(); //Declare a dynamic fragment variable
-        Fragment TaskDetails1frag = new TaskDetails(); //Declare a dynamic fragment variable
+//        Fragment TaskDetails1frag = new TaskDetails(); //Declare a dynamic fragment variable
+        SharedPreferences prefs = getSharedPreferences("MyTask", MODE_PRIVATE);
+        //declare share preference editor
+        SharedPreferences.Editor editor = prefs.edit();
 
+        //clear share preference
+        editor.clear();
+        editor.putInt("TaskTime", position);
+        //commit share preference edit
+        editor.apply();
+        editor.commit();
 
-//        switch (position) {
-//            case 0:
-//                frag = new NineNewsFragment(); //instantiate Nine News Fragment to the frag variable
-//                break;
-//            case 1:
-//                frag = new ABCFragment(); //instantiate ABC News Fragment to the frag variable
-//                break;
-//            case 2:
-//                frag = new AgeNews(); //instantiate Age News Fragment to the frag variable
-//                break;
-//            case 3:
-//                frag = new SydneyMorningHeraldNews(); //instantiate Sydney Morning Herald News Fragment to the frag variable
-//                break;
-//            default:
-//                throw new IllegalStateException("Unexpected value: " + position);
-//        }
 
         FragmentManager TaskfragmentManager = getSupportFragmentManager(); //declare a fragment manager
         FragmentTransaction TaskfragmentTransaction = TaskfragmentManager.beginTransaction(); //declare a fragment transaction
@@ -88,13 +82,10 @@ public class home extends FragmentActivity implements TimeTableAdapter.OnFragmen
         TaskfragmentTransaction.replace(R.id.TaskLayout,Taskfrag, "TaskFragment");//.addToBackStack(null); //replace the fragment that user is selected to the screen and add to back stack
         TaskfragmentTransaction.commit(); //commit the changes of the fragment transaction
 
-        FragmentManager TaskDetailsfragmentManager = getSupportFragmentManager(); //declare a fragment manager
-        FragmentTransaction TaskDetailsfragmentTransaction = TaskDetailsfragmentManager.beginTransaction(); //declare a fragment transaction
-//        TaskDetailsfragmentTransaction.replace(R.id.TaskDetailslayout1,TaskDetails1frag, "TaskDetails1Fragment").addToBackStack(null); //replace the fragment that user is selected to the screen and add to back stack
-        TaskDetailsfragmentTransaction.replace(R.id.TaskDetailslayout1,TaskDetails1frag, "TaskDetails1Fragment");//.addToBackStack(null); //replace the fragment that user is selected to the screen and add to back stack
-        TaskDetailsfragmentTransaction.commit(); //commit the changes of the fragment transaction
-
-//        TaskDetailsfragmentTransaction.replace(R.id.TaskLayout,Taskfrag, "TaskFragment").addToBackStack(null); //replace the fragment that user is selected to the screen and add to back stack
+//        FragmentManager TaskDetailsfragmentManager = getSupportFragmentManager(); //declare a fragment manager
+//        FragmentTransaction TaskDetailsfragmentTransaction = TaskDetailsfragmentManager.beginTransaction(); //declare a fragment transaction
+////        TaskDetailsfragmentTransaction.replace(R.id.TaskDetailslayout1,TaskDetails1frag, "TaskDetails1Fragment").addToBackStack(null); //replace the fragment that user is selected to the screen and add to back stack
+//        TaskDetailsfragmentTransaction.replace(R.id.TaskDetailslayout1,TaskDetails1frag, "TaskDetails1Fragment");//.addToBackStack(null); //replace the fragment that user is selected to the screen and add to back stack
 //        TaskDetailsfragmentTransaction.commit(); //commit the changes of the fragment transaction
 
     }
