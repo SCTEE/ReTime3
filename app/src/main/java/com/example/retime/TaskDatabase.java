@@ -28,7 +28,6 @@ public class TaskDatabase extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(" drop table if EXISTS "+TABLE_NAME); //drop older table if it is exist
         onCreate(db);
-      //  onCreate(db);
 
     }
 }
