@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
@@ -84,7 +85,10 @@ public class Task extends Fragment implements View.OnClickListener{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_task, container, false);
-
+        @SuppressLint("WrongConstant") SharedPreferences getprefs = getActivity().getSharedPreferences("MyTask", Context.MODE_PRIVATE);
+        position = getprefs.getInt("TaskTime",0);
+        db = openHelper.getWritableDatabase();
+        Cursor data = db.rawQuery("Select * From " + TaskDatabase.TABLE_NAME + " Where " + TaskDatabase.COL_1 + " = " + position, null);
         AddTask = (Button) view.findViewById(R.id.AddTaskbtn);
         AddTask.setOnClickListener(this);
         Backbtn = (Button) view.findViewById(R.id.backbtn);
@@ -103,6 +107,22 @@ public class Task extends Fragment implements View.OnClickListener{
         tasket2 = (EditText) view.findViewById(R.id.editText4);
         breaket2 = (EditText) view.findViewById(R.id.editText5);
         goalet2 = (EditText) view.findViewById(R.id.editText6);
+        if (data.getCount() > 0){
+            data.moveToFirst();
+            tasket1.setText(data.getString(1));
+            breaket1.setText(data.getString(2));
+            goalet1.setText(data.getString(3));
+            Log.d("blabla", Integer.toString(data.getString(4).length()));
+            if (data.getString(4).length() != 0 || data.getString(5).length() != 0 || data.getString(6).length() != 0){
+                AddTask.setVisibility(View.INVISIBLE);
+                tasket2.setText(data.getString(4));
+                breaket2.setText(data.getString(5));
+                goalet2.setText(data.getString(6));
+            }
+            else {
+                AddTask.setVisibility(View.VISIBLE);
+            }
+        }
 
         return view;
     }
@@ -112,27 +132,15 @@ public class Task extends Fragment implements View.OnClickListener{
         switch (v.getId()) {
             case R.id.AddTaskbtn:
                 AddTask.setVisibility(View.INVISIBLE);
-                task1.setVisibility(View.VISIBLE);
-                break1.setVisibility(View.VISIBLE);
-                goal1.setVisibility(View.VISIBLE);
-                task2.setVisibility(View.VISIBLE);
-                break2.setVisibility(View.VISIBLE);
-                goal2.setVisibility(View.VISIBLE);
-                tasket1.setVisibility(View.VISIBLE);
-                breaket1.setVisibility(View.VISIBLE);
-                goalet1.setVisibility(View.VISIBLE);
-                tasket2.setVisibility(View.VISIBLE);
-                breaket2.setVisibility(View.VISIBLE);
-                goalet2.setVisibility(View.VISIBLE);
                 break;
             case R.id.backbtn:
                 Intent intent = new Intent(getActivity(), home.class);
                 startActivity(intent);
                 break;
             case R.id.savebtn:
-                @SuppressLint("WrongConstant") SharedPreferences getprefs = getActivity().getSharedPreferences("MyTask", Context.MODE_PRIVATE);
-                position = getprefs.getInt("TaskTime",0);
-                db = openHelper.getWritableDatabase();
+//                @SuppressLint("WrongConstant") SharedPreferences getprefs = getActivity().getSharedPreferences("MyTask", Context.MODE_PRIVATE);
+//                position = getprefs.getInt("TaskTime",0);
+//                db = openHelper.getWritableDatabase();
                 String firsttask = tasket1.getText().toString();
                 String firstbreak = breaket1.getText().toString();
                 String firstgoal = goalet1.getText().toString();
@@ -142,7 +150,6 @@ public class Task extends Fragment implements View.OnClickListener{
                 appenddata(position, firsttask, firstbreak, firstgoal, secondtask, secondbreak, secondgoal);
                 break;
             default:
-
                 break;
         }
     }

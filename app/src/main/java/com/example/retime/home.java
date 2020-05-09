@@ -16,7 +16,7 @@ import java.util.List;
 
 public class home extends FragmentActivity implements TimeTableAdapter.OnFragmentListener {
     String[] TimeList = { "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00", "24:00"};
-//    String[] companynameList = {"9News", "ABC News", "The Age", "Sydney Morning Herald"}; //String variable of the company name list
+
 
     RecyclerView TimeTableRecycleView;
     TimeTableAdapter TimeTableAdapter;
@@ -32,6 +32,7 @@ public class home extends FragmentActivity implements TimeTableAdapter.OnFragmen
 //        AddTask = findViewById(R.id.AddTaskbtn);
 //        AddTask.setOnClickListener(new AddTaskOnClickListner());
         TimeTableRecycleView = findViewById(R.id.schedule);
+        TimeTableRecycleView.setVisibility(View.VISIBLE);
         // Create adapter passing in the sample user data
         TimeTableAdapter = new TimeTableAdapter(TimeTableList, home.this, this);
         // Attach the adapter to the recyclerview to populate items
@@ -81,7 +82,7 @@ public class home extends FragmentActivity implements TimeTableAdapter.OnFragmen
 //        TaskfragmentTransaction.replace(R.id.TaskLayout,Taskfrag, "TaskFragment").addToBackStack(null); //replace the fragment that user is selected to the screen and add to back stack
         TaskfragmentTransaction.replace(R.id.TaskLayout,Taskfrag, "TaskFragment");//.addToBackStack(null); //replace the fragment that user is selected to the screen and add to back stack
         TaskfragmentTransaction.commit(); //commit the changes of the fragment transaction
-
+        TimeTableRecycleView.setVisibility(View.INVISIBLE);
 //        FragmentManager TaskDetailsfragmentManager = getSupportFragmentManager(); //declare a fragment manager
 //        FragmentTransaction TaskDetailsfragmentTransaction = TaskDetailsfragmentManager.beginTransaction(); //declare a fragment transaction
 ////        TaskDetailsfragmentTransaction.replace(R.id.TaskDetailslayout1,TaskDetails1frag, "TaskDetails1Fragment").addToBackStack(null); //replace the fragment that user is selected to the screen and add to back stack
