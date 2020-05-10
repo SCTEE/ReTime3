@@ -129,12 +129,13 @@ public class Task extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
+        Intent intent = new Intent(getActivity(), home.class);
         switch (v.getId()) {
             case R.id.AddTaskbtn:
                 AddTask.setVisibility(View.INVISIBLE);
                 break;
             case R.id.backbtn:
-                Intent intent = new Intent(getActivity(), home.class);
+
                 startActivity(intent);
                 break;
             case R.id.savebtn:
@@ -148,6 +149,8 @@ public class Task extends Fragment implements View.OnClickListener{
                 String secondbreak = breaket2.getText().toString();
                 String secondgoal = goalet2.getText().toString();
                 appenddata(position, firsttask, firstbreak, firstgoal, secondtask, secondbreak, secondgoal);
+
+                startActivity(intent);
                 break;
             default:
                 break;

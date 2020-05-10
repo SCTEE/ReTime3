@@ -7,9 +7,14 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +25,10 @@ public class home extends FragmentActivity implements TimeTableAdapter.OnFragmen
 
     RecyclerView TimeTableRecycleView;
     TimeTableAdapter TimeTableAdapter;
+    SQLiteOpenHelper openHelper;
+    SQLiteDatabase db;
 
-//    Button AddTask;
+    ImageButton Calendars;
 
     List<com.example.retime.TimeTable> TimeTableList = new ArrayList<>();
 
@@ -29,8 +36,8 @@ public class home extends FragmentActivity implements TimeTableAdapter.OnFragmen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-//        AddTask = findViewById(R.id.AddTaskbtn);
-//        AddTask.setOnClickListener(new AddTaskOnClickListner());
+        Calendars = findViewById(R.id.calendar);
+        Calendars.setOnClickListener(new CalendarsOnClickListener());
         TimeTableRecycleView = findViewById(R.id.schedule);
         TimeTableRecycleView.setVisibility(View.VISIBLE);
         // Create adapter passing in the sample user data
@@ -40,31 +47,37 @@ public class home extends FragmentActivity implements TimeTableAdapter.OnFragmen
         // Set layout manager to position the items
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         TimeTableRecycleView.setLayoutManager(layoutManager);
+        openHelper = new TaskDatabase(this);
+        db = openHelper.getWritableDatabase();
 
         //Filling our recycler view list
         for (int i= 0; i< TimeList.length; i++ )
         { String time = TimeList[i];
+            Cursor data = db.rawQuery("Select * From " + TaskDatabase.TABLE_NAME + " Where " + TaskDatabase.COL_1 + " = " + i, null);
+            if (data.getCount() > 0){
+                data.moveToFirst();
+                com.example.retime.TimeTable TimeTable = new com.example.retime.TimeTable (i, time, data.getString(1), data.getString(4));
+                TimeTableList.add(TimeTable); //Add company to the company list
+            }
+            else {
+                com.example.retime.TimeTable TimeTable = new com.example.retime.TimeTable (i, time, "", "");
+                TimeTableList.add(TimeTable); //Add company to the company list
+            }
 
-            com.example.retime.TimeTable TimeTable = new com.example.retime.TimeTable (i, time, "test1", "test2");
-            TimeTableList.add(TimeTable); //Add company to the company list
         }
     }
 
-//    private class AddTaskOnClickListner implements View.OnClickListener{
-//        @Override
-//        public void onClick(View v) {
-//            Fragment TaskDetails2frag = new TaskDetails(); //Declare a dynamic fragment variable
-//            FragmentManager TaskDetailsfragmentManager = getSupportFragmentManager(); //declare a fragment manager
-//            FragmentTransaction TaskDetailsfragmentTransaction = TaskDetailsfragmentManager.beginTransaction(); //declare a fragment transaction
-//            TaskDetailsfragmentTransaction.replace(R.id.TaskDetailslayout,TaskDetails2frag, "TaskDetails1Fragment").addToBackStack(null); //replace the fragment that user is selected to the screen and add to back stack
-//            TaskDetailsfragmentTransaction.commit(); //commit the changes of the fragment transaction
-//        }
-//    }
+    private class CalendarsOnClickListener implements View.OnClickListener{
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(home.this, CalendarTask.class);
+            startActivity(intent);
+        }
+    }
 
     public void onFragmentClick(int position) {
 
         Fragment Taskfrag = new Task(); //Declare a dynamic fragment variable
-//        Fragment TaskDetails1frag = new TaskDetails(); //Declare a dynamic fragment variable
         SharedPreferences prefs = getSharedPreferences("MyTask", MODE_PRIVATE);
         //declare share preference editor
         SharedPreferences.Editor editor = prefs.edit();
@@ -76,18 +89,12 @@ public class home extends FragmentActivity implements TimeTableAdapter.OnFragmen
         editor.apply();
         editor.commit();
 
-
         FragmentManager TaskfragmentManager = getSupportFragmentManager(); //declare a fragment manager
         FragmentTransaction TaskfragmentTransaction = TaskfragmentManager.beginTransaction(); //declare a fragment transaction
 //        TaskfragmentTransaction.replace(R.id.TaskLayout,Taskfrag, "TaskFragment").addToBackStack(null); //replace the fragment that user is selected to the screen and add to back stack
         TaskfragmentTransaction.replace(R.id.TaskLayout,Taskfrag, "TaskFragment");//.addToBackStack(null); //replace the fragment that user is selected to the screen and add to back stack
         TaskfragmentTransaction.commit(); //commit the changes of the fragment transaction
         TimeTableRecycleView.setVisibility(View.INVISIBLE);
-//        FragmentManager TaskDetailsfragmentManager = getSupportFragmentManager(); //declare a fragment manager
-//        FragmentTransaction TaskDetailsfragmentTransaction = TaskDetailsfragmentManager.beginTransaction(); //declare a fragment transaction
-////        TaskDetailsfragmentTransaction.replace(R.id.TaskDetailslayout1,TaskDetails1frag, "TaskDetails1Fragment").addToBackStack(null); //replace the fragment that user is selected to the screen and add to back stack
-//        TaskDetailsfragmentTransaction.replace(R.id.TaskDetailslayout1,TaskDetails1frag, "TaskDetails1Fragment");//.addToBackStack(null); //replace the fragment that user is selected to the screen and add to back stack
-//        TaskDetailsfragmentTransaction.commit(); //commit the changes of the fragment transaction
 
     }
 }
