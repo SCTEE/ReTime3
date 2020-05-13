@@ -3,6 +3,7 @@ package com.example.retime;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -11,12 +12,15 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,6 +33,13 @@ public class CalendarTask extends AppCompatActivity {
     CalendarView calendar;
     SQLiteDatabase db;
     SQLiteOpenHelper openHelper;
+    ImageButton task;
+    Button savebtn;
+    EditText firsttasket, firsttimeet, secondtasket, secondtimeet;
+    String _year, _month, _dayofmonth;
+    String today;
+    String[] todayarr;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,22 +47,61 @@ public class CalendarTask extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE); //will hide the title
         getSupportActionBar().hide(); // hide the title bar
         setContentView(R.layout.activity_calendartask);
+        task = findViewById(R.id.tasks);
+        task.setOnClickListener(new TasksOnClickListener());
+        savebtn = findViewById(R.id.savebtn);
+        savebtn.setOnClickListener(new SaveTaskOnClickListener());
+        firsttasket = findViewById(R.id.firsttask);
+        firsttimeet = findViewById(R.id.firsttime);
+        secondtasket = findViewById(R.id.secondtask);
+        secondtimeet = findViewById(R.id.secondtime);
         openHelper = new CalendarDatabase(this);
         db = openHelper.getWritableDatabase();
         calendar = findViewById(R.id.calendarView);
+        today = new SimpleDateFormat("dd/MM/yyyy").format(new Date(calendar.getDate()));
+        todayarr = today.split("/");
+        _dayofmonth = new DecimalFormat("00").format(Integer.parseInt(todayarr[0]));
+        _month = todayarr[1];
+        _year = todayarr[2];
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                Log.d("blabla1", Integer.toString(year));
-                Log.d("blabla2", Integer.toString(month + 1));
-                Log.d("blabla3", Integer.toString(dayOfMonth));
+                _year = Integer.toString(year);
+                _month = new DecimalFormat("00").format(month + 1);
+                _dayofmonth = Integer.toString(dayOfMonth);
+                Log.d("blabla", _dayofmonth);
+                Log.d("blabla1", _month);
+                Log.d("blabla2", _year);
             }
         });
-        Log.d("hihi", new SimpleDateFormat("ddMMyyyy").format(new Date(calendar.getDate())));
+        Log.d("blabla", _dayofmonth);
+        Log.d("blabla1", _month);
+        Log.d("blabla2", _year);
+    }
+
+    public void insertdata (String day, String firsttask, String firsttime, String secondtask, String secondtime) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CalendarDatabase.COL_1, day);
+        contentValues.put(CalendarDatabase.COL_2, firsttask);
+        contentValues.put(CalendarDatabase.COL_3, firsttime);
+        contentValues.put(CalendarDatabase.COL_4, secondtask);
+        contentValues.put(CalendarDatabase.COL_5, secondtime);
+        long id = db.insert(CalendarDatabase.TABLE_NAME, null, contentValues);
 
     }
 
+    private class SaveTaskOnClickListener implements View.OnClickListener{
 
+        @Override
+        public void onClick(View v) {
+            String firsttask = firsttasket.getText().toString();
+            String firsttime = firsttimeet.getText().toString();
+            String secondtask = secondtasket.getText().toString();
+            String secondtime = secondtimeet.getText().toString();
+            String todaydate = _dayofmonth.concat(_month).concat(_year);
+            insertdata(todaydate, firsttask, firsttime, secondtask, secondtime);
+        }
+    }
 
     private class TasksOnClickListener implements View.OnClickListener{
         @Override
@@ -60,5 +110,6 @@ public class CalendarTask extends AppCompatActivity {
             startActivity(intent);
         }
     }
+
 
 }
