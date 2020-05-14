@@ -129,7 +129,7 @@ public class CalendarTask extends AppCompatActivity {
     private class TasksOnClickListener implements View.OnClickListener{
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(CalendarTask.this, home.class);
+            Intent intent = new Intent(CalendarTask.this, home.class); 
             startActivity(intent);
         }
     }
