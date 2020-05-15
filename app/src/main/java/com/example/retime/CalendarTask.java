@@ -102,7 +102,7 @@ public class CalendarTask extends AppCompatActivity {
                 String firsttime = firsttimeet.getText().toString();
                 String secondtask = secondtasket.getText().toString();
                 String secondtime = secondtimeet.getText().toString();
-                if (TextUtils.isEmpty(firsttask) && TextUtils.isEmpty(firsttime) && TextUtils.isEmpty(secondtask) && TextUtils.isEmpty(secondtask)){
+                if (TextUtils.isEmpty(firsttask) && TextUtils.isEmpty(firsttime) && TextUtils.isEmpty(secondtask) && TextUtils.isEmpty(secondtime)){
                     deletebtn.setVisibility(View.INVISIBLE);
                 }
                 else {
@@ -118,7 +118,7 @@ public class CalendarTask extends AppCompatActivity {
         String firsttime = firsttimeet.getText().toString();
         String secondtask = secondtasket.getText().toString();
         String secondtime = secondtimeet.getText().toString();
-        if (TextUtils.isEmpty(firsttask) && TextUtils.isEmpty(firsttime) && TextUtils.isEmpty(secondtask) && TextUtils.isEmpty(secondtask)){
+        if (TextUtils.isEmpty(firsttask) && TextUtils.isEmpty(firsttime) && TextUtils.isEmpty(secondtask) && TextUtils.isEmpty(secondtime)){
             deletebtn.setVisibility(View.INVISIBLE);
         }
         else {
@@ -158,7 +158,7 @@ public class CalendarTask extends AppCompatActivity {
             String secondtime = secondtimeet.getText().toString();
             String todaydate = _dayofmonth.concat(_month).concat(_year);
             insertdata(todaydate, firsttask, firsttime, secondtask, secondtime);
-            if (TextUtils.isEmpty(firsttask) && TextUtils.isEmpty(firsttime) && TextUtils.isEmpty(secondtask) && TextUtils.isEmpty(secondtask)){
+            if (TextUtils.isEmpty(firsttask) && TextUtils.isEmpty(firsttime) && TextUtils.isEmpty(secondtask) && TextUtils.isEmpty(secondtime)){
                 deletebtn.setVisibility(View.INVISIBLE);
                 long id = db.delete(CalendarDatabase.TABLE_NAME, CalendarDatabase.COL_1 + " = " + todaydate, null);
             }

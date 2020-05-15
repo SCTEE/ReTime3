@@ -12,6 +12,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -126,6 +127,19 @@ public class Task extends Fragment implements View.OnClickListener{
             }
         }
 
+        String firsttask = tasket1.getText().toString();
+        String firstbreak = breaket1.getText().toString();
+        String firstgoal = goalet1.getText().toString();
+        String secondtask = tasket2.getText().toString();
+        String secondbreak = breaket2.getText().toString();
+        String secondgoal = goalet2.getText().toString();
+        if (TextUtils.isEmpty(firsttask) && TextUtils.isEmpty(firstbreak) && TextUtils.isEmpty(firstgoal) && TextUtils.isEmpty(secondtask) && TextUtils.isEmpty(secondbreak) && TextUtils.isEmpty(secondgoal)){
+            Deletebtn.setVisibility(View.INVISIBLE);
+        }
+        else {
+            Deletebtn.setVisibility(View.VISIBLE);
+        }
+
         return view;
     }
 
@@ -151,7 +165,14 @@ public class Task extends Fragment implements View.OnClickListener{
                 String secondbreak = breaket2.getText().toString();
                 String secondgoal = goalet2.getText().toString();
                 appenddata(position, firsttask, firstbreak, firstgoal, secondtask, secondbreak, secondgoal);
-
+                if (TextUtils.isEmpty(firsttask) && TextUtils.isEmpty(firstbreak) && TextUtils.isEmpty(firstgoal) && TextUtils.isEmpty(secondtask) && TextUtils.isEmpty(secondbreak) && TextUtils.isEmpty(secondgoal)){
+                    Deletebtn.setVisibility(View.INVISIBLE);
+                    long id = db.delete(TaskDatabase.TABLE_NAME, TaskDatabase.COL_1 + " = " + position, null);
+                    AddTask.setVisibility(View.VISIBLE);
+                }
+                else {
+                    Deletebtn.setVisibility(View.VISIBLE);
+                }
                 startActivity(intent);
                 break;
             case R.id.deletebtn:
@@ -163,6 +184,7 @@ public class Task extends Fragment implements View.OnClickListener{
                 goalet2.setText("");
                 AddTask.setVisibility(View.VISIBLE);
                 deletedata(position);
+                Deletebtn.setVisibility(View.INVISIBLE);
                 break;
             default:
                 break;
@@ -171,7 +193,7 @@ public class Task extends Fragment implements View.OnClickListener{
 
     public void deletedata (int position){
         long id = db.delete(TaskDatabase.TABLE_NAME, TaskDatabase.COL_1 + " = " + position, null);
-        
+        Toast.makeText(getActivity(), "delete successfully", Toast.LENGTH_LONG).show();
     }
 
     public void appenddata (int position, String task1, String break1, String goal1, String task2, String break2, String goal2) {
