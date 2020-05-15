@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -36,7 +37,7 @@ public class CalendarTask extends AppCompatActivity {
     SQLiteDatabase db;
     SQLiteOpenHelper openHelper;
     ImageButton task;
-    Button savebtn;
+    Button savebtn, deletebtn;
     EditText firsttasket, firsttimeet, secondtasket, secondtimeet;
     String _year, _month, _dayofmonth;
     String today;
@@ -53,6 +54,8 @@ public class CalendarTask extends AppCompatActivity {
         task.setOnClickListener(new TasksOnClickListener());
         savebtn = findViewById(R.id.savebtn);
         savebtn.setOnClickListener(new SaveTaskOnClickListener());
+        deletebtn = findViewById(R.id.deletebtn);
+        deletebtn.setOnClickListener(new DeleteTaskOnClickListener());
         firsttasket = findViewById(R.id.firsttask);
         firsttimeet = findViewById(R.id.firsttime);
         secondtasket = findViewById(R.id.secondtask);
@@ -95,11 +98,33 @@ public class CalendarTask extends AppCompatActivity {
                     secondtasket.setText(data.getString(3));
                     secondtimeet.setText(data.getString(4));
                 }
+                String firsttask = firsttasket.getText().toString();
+                String firsttime = firsttimeet.getText().toString();
+                String secondtask = secondtasket.getText().toString();
+                String secondtime = secondtimeet.getText().toString();
+                if (TextUtils.isEmpty(firsttask) && TextUtils.isEmpty(firsttime) && TextUtils.isEmpty(secondtask) && TextUtils.isEmpty(secondtask)){
+                    deletebtn.setVisibility(View.INVISIBLE);
+                }
+                else {
+                    deletebtn.setVisibility(View.VISIBLE);
+                }
             }
         });
 //        Log.d("blabla", _dayofmonth);
 //        Log.d("blabla1", _month);
 //        Log.d("blabla2", _year);
+
+        String firsttask = firsttasket.getText().toString();
+        String firsttime = firsttimeet.getText().toString();
+        String secondtask = secondtasket.getText().toString();
+        String secondtime = secondtimeet.getText().toString();
+        if (TextUtils.isEmpty(firsttask) && TextUtils.isEmpty(firsttime) && TextUtils.isEmpty(secondtask) && TextUtils.isEmpty(secondtask)){
+            deletebtn.setVisibility(View.INVISIBLE);
+        }
+        else {
+            deletebtn.setVisibility(View.VISIBLE);
+        }
+
     }
 
     public void insertdata (String day, String firsttask, String firsttime, String secondtask, String secondtime) {
@@ -114,6 +139,15 @@ public class CalendarTask extends AppCompatActivity {
 
     }
 
+    public void deletedata (String day) {
+        long id = db.delete(CalendarDatabase.TABLE_NAME, CalendarDatabase.COL_1 + " = " + day, null);
+        firsttasket.setText("");
+        firsttimeet.setText("");
+        secondtasket.setText("");
+        secondtimeet.setText("");
+        Toast.makeText(this, "delete successfully", Toast.LENGTH_LONG).show();
+    }
+
     private class SaveTaskOnClickListener implements View.OnClickListener{
 
         @Override
@@ -124,6 +158,22 @@ public class CalendarTask extends AppCompatActivity {
             String secondtime = secondtimeet.getText().toString();
             String todaydate = _dayofmonth.concat(_month).concat(_year);
             insertdata(todaydate, firsttask, firsttime, secondtask, secondtime);
+            if (TextUtils.isEmpty(firsttask) && TextUtils.isEmpty(firsttime) && TextUtils.isEmpty(secondtask) && TextUtils.isEmpty(secondtask)){
+                deletebtn.setVisibility(View.INVISIBLE);
+                long id = db.delete(CalendarDatabase.TABLE_NAME, CalendarDatabase.COL_1 + " = " + todaydate, null);
+            }
+            else {
+                deletebtn.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    private class DeleteTaskOnClickListener implements View.OnClickListener{
+
+        @Override
+        public void onClick(View v) {
+            String todaydate = _dayofmonth.concat(_month).concat(_year);
+            deletedata(todaydate);
         }
     }
 

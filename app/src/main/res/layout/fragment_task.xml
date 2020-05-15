@@ -216,6 +216,21 @@
         app:layout_constraintTop_toBottomOf="@+id/TaskDetailslayout2" />
 
     <Button
+        android:id="@+id/deletebtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="11dp"
+        android:layout_marginTop="75dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="44dp"
+        android:text="Delete"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/savebtn"
+        app:layout_constraintStart_toEndOf="@+id/backbtn"
+        app:layout_constraintTop_toBottomOf="@+id/TaskDetailslayout2"
+        app:layout_constraintVertical_bias="0.50" />
+
+    <Button
         android:id="@+id/savebtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

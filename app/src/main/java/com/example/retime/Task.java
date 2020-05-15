@@ -38,7 +38,7 @@ public class Task extends Fragment implements View.OnClickListener{
     private String mParam2;
 
     View view;
-    Button AddTask, Backbtn, Savebtn;
+    Button AddTask, Backbtn, Savebtn, Deletebtn;
     TextView task1, break1, goal1, task2, break2, goal2;
     EditText tasket1, breaket1, goalet1, tasket2, breaket2, goalet2;
 
@@ -95,6 +95,8 @@ public class Task extends Fragment implements View.OnClickListener{
         Backbtn.setOnClickListener(this);
         Savebtn = (Button) view.findViewById(R.id.savebtn);
         Savebtn.setOnClickListener(this);
+        Deletebtn = (Button) view.findViewById(R.id.deletebtn);
+        Deletebtn.setOnClickListener(this);
         task1 = (TextView) view.findViewById(R.id.textView);
         break1 = (TextView) view.findViewById(R.id.textView2);
         goal1 = (TextView) view.findViewById(R.id.textView3);
@@ -152,9 +154,24 @@ public class Task extends Fragment implements View.OnClickListener{
 
                 startActivity(intent);
                 break;
+            case R.id.deletebtn:
+                tasket1.setText("");
+                breaket1.setText("");
+                goalet1.setText("");
+                tasket2.setText("");
+                breaket2.setText("");
+                goalet2.setText("");
+                AddTask.setVisibility(View.VISIBLE);
+                deletedata(position);
+                break;
             default:
                 break;
         }
+    }
+
+    public void deletedata (int position){
+        long id = db.delete(TaskDatabase.TABLE_NAME, TaskDatabase.COL_1 + " = " + position, null);
+        
     }
 
     public void appenddata (int position, String task1, String break1, String goal1, String task2, String break2, String goal2) {
