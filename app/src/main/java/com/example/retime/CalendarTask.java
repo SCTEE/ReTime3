@@ -2,12 +2,17 @@ package com.example.retime;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -50,6 +55,13 @@ public class CalendarTask extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE); //will hide the title
         getSupportActionBar().hide(); // hide the title bar
         setContentView(R.layout.activity_calendartask);
+        createNotificationChannel();
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "RetimeChannel")
+                .setSmallIcon(R.drawable.smallcalendar)
+                .setContentTitle("Retime Calendar")
+                .setContentText("You have a task!")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        NotificationManagerCompat notifimgr = NotificationManagerCompat.from(this);
         task = findViewById(R.id.tasks);
         task.setOnClickListener(new TasksOnClickListener());
         savebtn = findViewById(R.id.savebtn);
@@ -77,6 +89,7 @@ public class CalendarTask extends AppCompatActivity {
             firsttimeet.setText(data.getString(2));
             secondtasket.setText(data.getString(3));
             secondtimeet.setText(data.getString(4));
+            notifimgr.notify(0, builder.build());
         }
 
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
@@ -127,6 +140,23 @@ public class CalendarTask extends AppCompatActivity {
 
     }
 
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Channel Name";
+            String description = "Channel Description";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("RetimeChannel", name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
     public void insertdata (String day, String firsttask, String firsttime, String secondtask, String secondtime) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(CalendarDatabase.COL_1, day);
@@ -174,6 +204,7 @@ public class CalendarTask extends AppCompatActivity {
         public void onClick(View v) {
             String todaydate = _dayofmonth.concat(_month).concat(_year);
             deletedata(todaydate);
+            deletebtn.setVisibility(View.INVISIBLE);
         }
     }
 

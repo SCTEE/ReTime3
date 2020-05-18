@@ -1,12 +1,17 @@
 package com.example.retime;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
@@ -23,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
      Button _register_btn, _login_btn, _facebook_login_btn;
      EditText _main_password, _main_username;
      Cursor cursor;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,5 +85,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+
 
 }
