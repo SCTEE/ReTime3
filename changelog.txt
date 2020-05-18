@@ -1,0 +1,21 @@
+changelog details
+
+27 Apr 2020 - Push innitial commit on github. Created the project for this name call ReTime.
+
+6 May 2020 - Implemen fragment for task feature
+
+8 May 2020 - Create database for saving tasks and insert them in the field
+
+9 May 2020 - Able to read and display tasks details on screen from database
+
+10 May 2020 - Create Calander feature, and display task in main page 
+
+12 May 2020 - Implement calender view and calendar task database
+
+13 May 2020 - Save calendar task details to its database
+
+14 May 2020 - Update calander task and retrieve calendar task from database
+
+15 May 2020 - Add delete button in task feature to delete record in database
+
+18 May 2020 - Push notification from the app to display what task to do 
