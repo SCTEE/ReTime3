@@ -146,34 +146,47 @@ public class Task extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(getActivity(), home.class);
+        String firsttask = tasket1.getText().toString();
+        String firstbreak = breaket1.getText().toString();
+        String firstgoal = goalet1.getText().toString();
+        String secondtask = tasket2.getText().toString();
+        String secondbreak = breaket2.getText().toString();
+        String secondgoal = goalet2.getText().toString();
         switch (v.getId()) {
             case R.id.AddTaskbtn:
-                AddTask.setVisibility(View.INVISIBLE);
+
+                if(TextUtils.isEmpty(firsttask)){
+                    Toast.makeText(getActivity(), "Please fill in the first task", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    AddTask.setVisibility(View.INVISIBLE);
+                }
                 break;
             case R.id.backbtn:
 
                 startActivity(intent);
                 break;
             case R.id.savebtn:
-//                @SuppressLint("WrongConstant") SharedPreferences getprefs = getActivity().getSharedPreferences("MyTask", Context.MODE_PRIVATE);
-//                position = getprefs.getInt("TaskTime",0);
-//                db = openHelper.getWritableDatabase();
-                String firsttask = tasket1.getText().toString();
-                String firstbreak = breaket1.getText().toString();
-                String firstgoal = goalet1.getText().toString();
-                String secondtask = tasket2.getText().toString();
-                String secondbreak = breaket2.getText().toString();
-                String secondgoal = goalet2.getText().toString();
-                appenddata(position, firsttask, firstbreak, firstgoal, secondtask, secondbreak, secondgoal);
-                if (TextUtils.isEmpty(firsttask) && TextUtils.isEmpty(firstbreak) && TextUtils.isEmpty(firstgoal) && TextUtils.isEmpty(secondtask) && TextUtils.isEmpty(secondbreak) && TextUtils.isEmpty(secondgoal)){
-                    Deletebtn.setVisibility(View.INVISIBLE);
-                    long id = db.delete(TaskDatabase.TABLE_NAME, TaskDatabase.COL_1 + " = " + position, null);
-                    AddTask.setVisibility(View.VISIBLE);
+
+                if(TextUtils.isEmpty(firsttask) && !TextUtils.isEmpty(secondtask)){
+                    Toast.makeText(getActivity(), "Please fill in the first task", Toast.LENGTH_LONG).show();
                 }
                 else {
-                    Deletebtn.setVisibility(View.VISIBLE);
+                    if (((TextUtils.isEmpty(firsttask)) && !(TextUtils.isEmpty(firstbreak) && TextUtils.isEmpty(firstgoal))) || ((TextUtils.isEmpty(secondtask)) && !(TextUtils.isEmpty(secondbreak) && TextUtils.isEmpty(secondgoal)))) {
+                        Toast.makeText(getActivity(), "Please enter task name", Toast.LENGTH_LONG).show();
+                    } else {
+
+                        appenddata(position, firsttask, firstbreak, firstgoal, secondtask, secondbreak, secondgoal);
+                        if (TextUtils.isEmpty(firsttask) && TextUtils.isEmpty(firstbreak) && TextUtils.isEmpty(firstgoal) && TextUtils.isEmpty(secondtask) && TextUtils.isEmpty(secondbreak) && TextUtils.isEmpty(secondgoal)) {
+                            Deletebtn.setVisibility(View.INVISIBLE);
+                            long id = db.delete(TaskDatabase.TABLE_NAME, TaskDatabase.COL_1 + " = " + position, null);
+                            AddTask.setVisibility(View.VISIBLE);
+                        } else {
+                            Deletebtn.setVisibility(View.VISIBLE);
+                        }
+                        startActivity(intent);
+                    }
                 }
-                startActivity(intent);
                 break;
             case R.id.deletebtn:
                 tasket1.setText("");
