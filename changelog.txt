@@ -32,3 +32,6 @@ Implement push notification function when there is a task now or show notificati
 
 19 May 2020 - Implement mandatory validation for task name
 Implement mandatory validation in task and calendar save function if user enter task details without task name
+
+20 May 2020 - Add back color to current task
+Add background color to the current time task and change to other color if there is a task details

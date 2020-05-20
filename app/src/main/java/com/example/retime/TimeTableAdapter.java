@@ -1,5 +1,10 @@
 package com.example.retime;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +15,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 //import android.app.Fragment;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 public class TimeTableAdapter extends RecyclerView.Adapter<TimeTableAdapter.TimeTableViewHolder>{
     private List<com.example.retime.TimeTable> TimeTableList;
     private Context context;
+    String currenttime;
+    SQLiteDatabase db;
+    SQLiteOpenHelper openHelper;
     private OnFragmentListener monfragmentlistener;
 
     public TimeTableAdapter(List<com.example.retime.TimeTable> TimeTableList, Context context, OnFragmentListener onfragmentlistener) {
@@ -40,6 +52,19 @@ public class TimeTableAdapter extends RecyclerView.Adapter<TimeTableAdapter.Time
         holder.TimeTableTime.setText(TimeTableList.get(position).getTime());
         holder.TimeTableTask1.setText(TimeTableList.get(position).getTask1());
         holder.TimeTableTask2.setText(TimeTableList.get(position).getTask2());
+        currenttime = new SimpleDateFormat("kk:mm").format(Calendar.getInstance().getTime());
+        openHelper = new TaskDatabase(holder.tasklayout.getContext());
+        db = openHelper.getWritableDatabase();
+        if(currenttime.substring(0,2).equals(new DecimalFormat("00").format(position + 1))){
+
+            Cursor data = db.rawQuery("Select * From " + TaskDatabase.TABLE_NAME + " Where " + TaskDatabase.COL_1 + " = " + position, null);
+            if (data.getCount() > 0){
+                holder.tasklayout.setBackgroundColor(Color.parseColor("#CF6DF3"));
+            }
+            else {
+                holder.tasklayout.setBackgroundColor(Color.parseColor("#FF9800"));
+            }
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -53,6 +78,7 @@ public class TimeTableAdapter extends RecyclerView.Adapter<TimeTableAdapter.Time
         public TextView TimeTableTime;
         public TextView TimeTableTask1;
         public TextView TimeTableTask2;
+        ConstraintLayout tasklayout;
         public OnFragmentListener onfragmentlistener;
 
         public TimeTableViewHolder (View view, OnFragmentListener onfragmentlistener)
@@ -61,6 +87,7 @@ public class TimeTableAdapter extends RecyclerView.Adapter<TimeTableAdapter.Time
             TimeTableTime = view.findViewById(R.id.time);
             TimeTableTask1 = view.findViewById(R.id.task1);
             TimeTableTask2 = view.findViewById(R.id.task2);
+            tasklayout = view.findViewById(R.id.tasklayout);
             this.onfragmentlistener = onfragmentlistener;
             view.setOnClickListener(this);
         }
