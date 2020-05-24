@@ -8,11 +8,13 @@ public class TaskDatabase extends SQLiteOpenHelper {
     public static final String TABLE_NAME = "taskdetails";
     public static final String COL_1 = "ID";
     public static final String COL_2 = "FirstTask";
-    public static final String COL_3 = "FirstBreak";
+    public static final String COL_3 = "FirstEndTime";
     public static final String COL_4 = "FirstGoal";
     public static final String COL_5 = "SecondTask";
-    public static final String COL_6 = "SecondBreak";
+    public static final String COL_6 = "SecondEndTime";
     public static final String COL_7 = "SecondGoal";
+    public static final String COL_8 = "Date";
+    public static final String COL_9 = "Position";
 
     public TaskDatabase(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -21,7 +23,7 @@ public class TaskDatabase extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 //        db.execSQL(" CREATE table " + TABLE_NAME+ "(ID INTEGER PRIMARY KEY AUTOINCREMENT, FirstTask TEXT, FirstBreak TEXT, FirstGoal TEXT, SecondTask TEXT, SecondBreak TEXT, SecondGoal TEXT)");
-        db.execSQL(" CREATE table " + TABLE_NAME+ "(ID INTEGER PRIMARY KEY, FirstTask TEXT, FirstBreak TEXT, FirstGoal TEXT, SecondTask TEXT, SecondBreak TEXT, SecondGoal TEXT)");
+        db.execSQL(" CREATE table " + TABLE_NAME+ "(ID TEXT PRIMARY KEY, FirstTask TEXT, FirstEndTime TEXT, FirstGoal TEXT, SecondTask TEXT, SecondEndTime TEXT, SecondGoal TEXT, Date TEXT, Position INTEGER)");
     }
 
     @Override

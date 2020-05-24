@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -40,7 +41,8 @@ public class home extends FragmentActivity implements TimeTableAdapter.OnFragmen
 
     ImageButton Calendars, Tasks;
 
-    String currenttime;
+    String currenttime, today, _year, _month, _dayofmonth, ID, endcontent = "";
+    String[] todayarr;
 
 
     List<com.example.retime.TimeTable> TimeTableList = new ArrayList<>();
@@ -52,7 +54,7 @@ public class home extends FragmentActivity implements TimeTableAdapter.OnFragmen
         createNotificationChannel();
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "RetimeChannel")
                 .setSmallIcon(R.drawable.smallcalendar)
-                .setContentTitle("Retime Calendar")
+                .setContentTitle("Retime Task")
                 .setContentText("You have a task!")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         NotificationManagerCompat notifimgr = NotificationManagerCompat.from(this);
@@ -71,16 +73,25 @@ public class home extends FragmentActivity implements TimeTableAdapter.OnFragmen
         TimeTableRecycleView.setLayoutManager(layoutManager);
         openHelper = new TaskDatabase(this);
         db = openHelper.getWritableDatabase();
-
+        today = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
+        todayarr = today.split("/");
+        _dayofmonth = new DecimalFormat("00").format(Integer.parseInt(todayarr[0]));
+        _month = todayarr[1];
+        _year = todayarr[2];
+        currenttime = new SimpleDateFormat("kk:mm").format(Calendar.getInstance().getTime());
+        String todaydate = _dayofmonth.concat(_month).concat(_year);
+        long id = db.delete(TaskDatabase.TABLE_NAME, TaskDatabase.COL_8 + " < '" + todaydate + "'", null);
         //Filling our recycler view list
         for (int i= 0; i< TimeList.length; i++ )
         { String time = TimeList[i];
-            Cursor data = db.rawQuery("Select * From " + TaskDatabase.TABLE_NAME + " Where " + TaskDatabase.COL_1 + " = " + i, null);
+            ID = todaydate.concat("/").concat(Integer.toString(i));
+//            Log.d("blabla", "Select * From " + TaskDatabase.TABLE_NAME + " Where (" + TaskDatabase.COL_1 + " = '" + ID + "' AND " + TaskDatabase.COL_8 + " = '" + todaydate + "' AND " + TaskDatabase.COL_9 + " = " + i + ")");
+            Cursor data = db.rawQuery("Select * From " + TaskDatabase.TABLE_NAME + " Where " + TaskDatabase.COL_1 + " = '" + ID + "' AND " + TaskDatabase.COL_8 + " = '" + todaydate + "' AND " + TaskDatabase.COL_9 + " = " + i, null);
             if (data.getCount() > 0){
                 data.moveToFirst();
                 com.example.retime.TimeTable TimeTable = new com.example.retime.TimeTable (i, time, data.getString(1), data.getString(4));
                 TimeTableList.add(TimeTable); //Add company to the company list
-                currenttime = new SimpleDateFormat("kk:mm").format(Calendar.getInstance().getTime());
+
                 if (currenttime.substring(0,2).equals(TimeList[i].substring(0,2))){
                     notifimgr.notify(0, builder.build());
                 }
@@ -93,7 +104,40 @@ public class home extends FragmentActivity implements TimeTableAdapter.OnFragmen
 
         }
 
-//        notifimgr.notify(0, builder.build());
+        Cursor data2 = db.rawQuery("Select * From " + TaskDatabase.TABLE_NAME + " Where " + TaskDatabase.COL_8 + " = '" + todaydate + "' AND " + TaskDatabase.COL_3 + " = '" + currenttime.substring(0,2) + "'", null);
+        if (data2.getCount() > 0){
+            data2.moveToFirst();
+            endcontent = endcontent.concat("'").concat(data2.getString(1)).concat("'");
+            for (int a = 1; a < data2.getCount(); a++){
+                data2.moveToNext();
+                endcontent = endcontent.concat(", '").concat(data2.getString(1)).concat("'");
+            }
+        }
+
+        Cursor data3 = db.rawQuery("Select * From " + TaskDatabase.TABLE_NAME + " Where " + TaskDatabase.COL_8 + " = '" + todaydate + "' AND " + TaskDatabase.COL_6 + " = '" + currenttime.substring(0,2) + "'", null);
+        if (data3.getCount() > 0){
+            data3.moveToFirst();
+            if (data2.getCount() > 0){
+                endcontent = endcontent.concat(", ");
+            }
+            endcontent = endcontent.concat("'").concat(data3.getString(4)).concat("'");
+            for (int a = 1; a < data3.getCount(); a++){
+                data3.moveToNext();
+                endcontent = endcontent.concat(", '").concat(data3.getString(4)).concat("'");
+            }
+        }
+
+        if (data2.getCount() > 0 || data3.getCount() > 0) {
+            endcontent = endcontent.concat(" is/are over.");
+
+            NotificationCompat.Builder builder2 = new NotificationCompat.Builder(this, "RetimeChannel")
+                    .setSmallIcon(R.drawable.smallcalendar)
+                    .setContentTitle("Retime Task")
+                    .setContentText(endcontent)
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+            notifimgr.notify(2, builder2.build());
+        }
     }
 
     private void createNotificationChannel() {
