@@ -38,3 +38,6 @@ Add background color to the current time task and change to other color if there
 
 24 May 2020 - Remove color to current task, link between calendar and task
 Remove background color to current time task and link the calendar task to task details and add validation on the time for each task in task details and calendar task
+
+27 May 2020 - Update UI of the app
+Chnge colour for buttons and make text field allign in center
