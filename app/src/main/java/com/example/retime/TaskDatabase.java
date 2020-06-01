@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class TaskDatabase extends SQLiteOpenHelper {
+    //database column name
     public static final String DATABASE_NAME = "taskdetails.db";
     public static final String TABLE_NAME = "taskdetails";
     public static final String COL_1 = "ID";
@@ -22,6 +23,7 @@ public class TaskDatabase extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        // create database table
         db.execSQL(" CREATE table " + TABLE_NAME+ "(ID TEXT PRIMARY KEY, FirstTask TEXT, FirstEndTime TEXT, FirstGoal TEXT, SecondTask TEXT, SecondEndTime TEXT, SecondGoal TEXT, Date TEXT, Position INTEGER)");
     }
 

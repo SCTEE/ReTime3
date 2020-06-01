@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.List;
 
 public class home extends FragmentActivity implements TimeTableAdapter.OnFragmentListener {
+    //variable declaration
     String[] TimeList = { "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00", "24:00"};
 
     RecyclerView TimeTableRecycleView;
@@ -47,6 +48,7 @@ public class home extends FragmentActivity implements TimeTableAdapter.OnFragmen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        //call notification channel function
         createNotificationChannel();
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "RetimeChannel")
                 .setSmallIcon(R.drawable.calendar)
@@ -54,6 +56,7 @@ public class home extends FragmentActivity implements TimeTableAdapter.OnFragmen
                 .setContentText("You have a task!")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         NotificationManagerCompat notifimgr = NotificationManagerCompat.from(this);
+        //get id from view and set listener to button
         Calendars = findViewById(R.id.calendar);
         Calendars.setOnClickListener(new CalendarsOnClickListener());
         Tasks = findViewById(R.id.tasks);
@@ -67,20 +70,25 @@ public class home extends FragmentActivity implements TimeTableAdapter.OnFragmen
         // Set layout manager to position the items
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         TimeTableRecycleView.setLayoutManager(layoutManager);
+        //initialize task database
         openHelper = new TaskDatabase(this);
         db = openHelper.getWritableDatabase();
+        //get current data with specific format
         today = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
         todayarr = today.split("/");
+        //change day format to 2 decimal
         _dayofmonth = new DecimalFormat("00").format(Integer.parseInt(todayarr[0]));
         _month = todayarr[1];
         _year = todayarr[2];
         currenttime = new SimpleDateFormat("kk:mm").format(Calendar.getInstance().getTime());
         String todaydate = _dayofmonth.concat(_month).concat(_year);
+        // delete all previous task details
         long id = db.delete(TaskDatabase.TABLE_NAME, TaskDatabase.COL_8 + " < '" + todaydate + "'", null);
         //Filling out recycler view list
         for (int i= 0; i< TimeList.length; i++ )
         { String time = TimeList[i];
             ID = todaydate.concat("/").concat(Integer.toString(i));
+            //select data from database and put in recycler view list
             Cursor data = db.rawQuery("Select * From " + TaskDatabase.TABLE_NAME + " Where " + TaskDatabase.COL_1 + " = '" + ID + "' AND " + TaskDatabase.COL_8 + " = '" + todaydate + "' AND " + TaskDatabase.COL_9 + " = " + i, null);
             if (data.getCount() > 0){
                 data.moveToFirst();
@@ -99,6 +107,7 @@ public class home extends FragmentActivity implements TimeTableAdapter.OnFragmen
 
         }
 
+        //create notification content
         Cursor data2 = db.rawQuery("Select * From " + TaskDatabase.TABLE_NAME + " Where " + TaskDatabase.COL_8 + " = '" + todaydate + "' AND " + TaskDatabase.COL_3 + " = '" + currenttime.substring(0,2) + "'", null);
         if (data2.getCount() > 0){
             data2.moveToFirst();
@@ -109,6 +118,7 @@ public class home extends FragmentActivity implements TimeTableAdapter.OnFragmen
             }
         }
 
+        //create notification content
         Cursor data3 = db.rawQuery("Select * From " + TaskDatabase.TABLE_NAME + " Where " + TaskDatabase.COL_8 + " = '" + todaydate + "' AND " + TaskDatabase.COL_6 + " = '" + currenttime.substring(0,2) + "'", null);
         if (data3.getCount() > 0){
             data3.moveToFirst();
@@ -122,6 +132,7 @@ public class home extends FragmentActivity implements TimeTableAdapter.OnFragmen
             }
         }
 
+        //push notification
         if (data2.getCount() > 0 || data3.getCount() > 0) {
             endcontent = endcontent.concat(" is/are over.");
 
@@ -135,6 +146,7 @@ public class home extends FragmentActivity implements TimeTableAdapter.OnFragmen
         }
     }
 
+    //create notification channel
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -153,6 +165,7 @@ public class home extends FragmentActivity implements TimeTableAdapter.OnFragmen
     private class CalendarsOnClickListener implements View.OnClickListener{
         @Override
         public void onClick(View v) {
+            //go to calendar task page
             Intent intent = new Intent(home.this, CalendarTask.class);
             startActivity(intent);
         }

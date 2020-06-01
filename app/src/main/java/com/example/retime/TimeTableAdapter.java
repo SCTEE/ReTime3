@@ -20,6 +20,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public class TimeTableAdapter extends RecyclerView.Adapter<TimeTableAdapter.TimeTableViewHolder>{
+    //variable declaration
     private List<com.example.retime.TimeTable> TimeTableList;
     private Context context;
     String currenttime, today, _year, _month, _dayofmonth, ID;
@@ -28,6 +29,7 @@ public class TimeTableAdapter extends RecyclerView.Adapter<TimeTableAdapter.Time
     SQLiteOpenHelper openHelper;
     private OnFragmentListener monfragmentlistener;
 
+    //time table adapter constructor
     public TimeTableAdapter(List<com.example.retime.TimeTable> TimeTableList, Context context, OnFragmentListener onfragmentlistener) {
         this.TimeTableList = TimeTableList;
         this.context = context;
@@ -59,12 +61,14 @@ public class TimeTableAdapter extends RecyclerView.Adapter<TimeTableAdapter.Time
 
     public class TimeTableViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
+        //variable declaration
         public TextView TimeTableTime;
         public TextView TimeTableTask1;
         public TextView TimeTableTask2;
         ConstraintLayout tasklayout;
         public OnFragmentListener onfragmentlistener;
 
+        //time table view holder constructor
         public TimeTableViewHolder (View view, OnFragmentListener onfragmentlistener)
         {   super(view);
 

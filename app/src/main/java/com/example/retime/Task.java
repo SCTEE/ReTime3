@@ -29,6 +29,7 @@ import java.util.Calendar;
 
 public class Task extends Fragment implements View.OnClickListener{
     // the fragment initialization parameters
+    //variable declaration
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
@@ -81,17 +82,20 @@ public class Task extends Fragment implements View.OnClickListener{
         position = getprefs.getInt("TaskTime",0);
         db = openHelper.getWritableDatabase();
         db2 = openHelper2.getWritableDatabase();
-
+        //get current date with specific format
         today = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
         todayarr = today.split("/");
+        //change current day format
         _dayofmonth = new DecimalFormat("00").format(Integer.parseInt(todayarr[0]));
         _month = todayarr[1];
         _year = todayarr[2];
         todaydate = _dayofmonth.concat(_month).concat(_year);
         ID = todaydate.concat("/").concat(Integer.toString(position));
 
+        //select query from database
         Cursor data = db.rawQuery("Select * From " + TaskDatabase.TABLE_NAME + " Where " + TaskDatabase.COL_1 + " = '" + ID + "' AND " + TaskDatabase.COL_8 + " = '" + todaydate + "' AND " + TaskDatabase.COL_9 + " = " + position, null);
 
+        //get id from view and set event listener to button
         AddTask = (Button) view.findViewById(R.id.AddTaskbtn);
         AddTask.setOnClickListener(this);
         Backbtn = (Button) view.findViewById(R.id.backbtn);
@@ -113,11 +117,13 @@ public class Task extends Fragment implements View.OnClickListener{
         endtimeet2 = (EditText) view.findViewById(R.id.editText5);
         goalet2 = (EditText) view.findViewById(R.id.editText6);
 
+        //set end time edit text to not editable
         if(position == 23){
             endtimeet1.setEnabled(false);
             endtimeet2.setEnabled(false);
         }
 
+        //set database data to edit text
         if (data.getCount() > 0){
             data.moveToFirst();
             tasket1.setText(data.getString(1));
@@ -134,6 +140,7 @@ public class Task extends Fragment implements View.OnClickListener{
             }
         }
 
+        //get edit text data
         String firsttask = tasket1.getText().toString();
         String firstendtime = endtimeet1.getText().toString();
         String firstgoal = goalet1.getText().toString();
@@ -141,6 +148,7 @@ public class Task extends Fragment implements View.OnClickListener{
         String secondendtime = endtimeet2.getText().toString();
         String secondgoal = goalet2.getText().toString();
 
+        //check if the task is from calendar database
         Cursor data2 = db2.rawQuery("Select * From " + CalendarDatabase.TABLE_NAME + " Where " + CalendarDatabase.COL_1 + " = " + todaydate + " AND " + CalendarDatabase.COL_2 + " = '" + secondtask + "' AND " + CalendarDatabase.COL_3 + " = '" + (position+1) +"'", null);
         if (data2.getCount() > 0){
             tasket2.setEnabled(false);
@@ -155,6 +163,7 @@ public class Task extends Fragment implements View.OnClickListener{
             tasket2.setEnabled(false);
         }
 
+        //hide delete button if the task details are blank
         if (TextUtils.isEmpty(firsttask) && TextUtils.isEmpty(firstendtime) && TextUtils.isEmpty(firstgoal) && TextUtils.isEmpty(secondtask) && TextUtils.isEmpty(secondendtime) && TextUtils.isEmpty(secondgoal)){
             Deletebtn.setVisibility(View.INVISIBLE);
         }
@@ -165,9 +174,11 @@ public class Task extends Fragment implements View.OnClickListener{
         return view;
     }
 
+    //on button click functioin
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(getActivity(), home.class);
+        //get text from edittext
         String firsttask = tasket1.getText().toString();
         String firstendtime = endtimeet1.getText().toString();
         String firstgoal = goalet1.getText().toString();
@@ -176,6 +187,7 @@ public class Task extends Fragment implements View.OnClickListener{
         String secondgoal = goalet2.getText().toString();
         int firsttime = 0, secondtime = 0;
         switch (v.getId()) {
+            //add task button event
             case R.id.AddTaskbtn:
 
                 if(TextUtils.isEmpty(firsttask)){
@@ -185,21 +197,25 @@ public class Task extends Fragment implements View.OnClickListener{
                     AddTask.setVisibility(View.INVISIBLE);
                 }
                 break;
+            //back to home page button event
             case R.id.backbtn:
 
                 startActivity(intent);
                 break;
+            //save task details button event
             case R.id.savebtn:
 
+                //display message if the fields are all empty
                 if (TextUtils.isEmpty(firsttask) && TextUtils.isEmpty(firstendtime) && TextUtils.isEmpty(firstgoal) && TextUtils.isEmpty(secondtask) && TextUtils.isEmpty(secondendtime) && TextUtils.isEmpty(secondgoal)){
                     Toast.makeText(getActivity(), "Nothing is save", Toast.LENGTH_LONG).show();
                 }
                 else{
-
+                    //display message if user enter second task without enter the first task
                     if(TextUtils.isEmpty(firsttask) && !TextUtils.isEmpty(secondtask)){
                         Toast.makeText(getActivity(), "Please fill in the first task", Toast.LENGTH_LONG).show();
                     }
                     else {
+                        //display message if user enter task details without task name
                         if (((TextUtils.isEmpty(firsttask)) && !(TextUtils.isEmpty(firstendtime) && TextUtils.isEmpty(firstgoal))) || ((TextUtils.isEmpty(secondtask)) && !(TextUtils.isEmpty(secondendtime) && TextUtils.isEmpty(secondgoal)))) {
                             Toast.makeText(getActivity(), "Please enter task name", Toast.LENGTH_LONG).show();
                         } else {
@@ -212,9 +228,11 @@ public class Task extends Fragment implements View.OnClickListener{
                                 secondtime = Integer.parseInt(secondendtime);
                             }
 
+                            //display message if the end time is more than 24 hours
                             if ((!TextUtils.isEmpty(firsttask) && ((firsttime > 24 || firsttime <= (position + 1)) && firsttime != 0 )) || (!TextUtils.isEmpty(secondtask) && ((secondtime > 24 || secondtime <= (position + 1)) && secondtime != 0))) {
                                 Toast.makeText(getActivity(), "Please enter the time between " + (position + 2) + " ~ 24", Toast.LENGTH_LONG).show();
                             } else {
+                                //call append data function
                                 appenddata(position, firsttask, firstendtime, firstgoal, secondtask, secondendtime, secondgoal);
                                 if (TextUtils.isEmpty(firsttask) && TextUtils.isEmpty(firstendtime) && TextUtils.isEmpty(firstgoal) && TextUtils.isEmpty(secondtask) && TextUtils.isEmpty(secondendtime) && TextUtils.isEmpty(secondgoal)) {
                                     Deletebtn.setVisibility(View.INVISIBLE);
@@ -229,8 +247,10 @@ public class Task extends Fragment implements View.OnClickListener{
                     }
                 }
                 break;
+            //delete task details button event
             case R.id.deletebtn:
                 Cursor data = db2.rawQuery("Select * From " + CalendarDatabase.TABLE_NAME + " Where " + CalendarDatabase.COL_1 + " = " + todaydate + " AND (" + CalendarDatabase.COL_3 + " = '" + (position+1) + "' OR " + CalendarDatabase.COL_5 + " = '" + (position+1) +"')", null);
+                //display message to inform user to delete from calendar if the task is enter from calendar
                 if (data.getCount() > 0){
                     Toast.makeText(getActivity(), "Please delete from calendar", Toast.LENGTH_LONG).show();
                 }
@@ -251,11 +271,13 @@ public class Task extends Fragment implements View.OnClickListener{
         }
     }
 
+    //delete task details in database
     public void deletedata (String ID){
         long id = db.delete(TaskDatabase.TABLE_NAME, TaskDatabase.COL_1 + " = '" + ID + "'", null);
         Toast.makeText(getActivity(), "delete successfully", Toast.LENGTH_LONG).show();
     }
 
+    //insert or update task details in database
     public void appenddata (int position, String task1, String break1, String goal1, String task2, String break2, String goal2) {
 
         ContentValues contentValues = new ContentValues();

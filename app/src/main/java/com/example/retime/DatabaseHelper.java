@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 
 public class DatabaseHelper extends SQLiteOpenHelper {
+    //database column name
     public static final String DATABASE_NAME = "register.db";
     public static final String TABLE_NAME = "register";
     public static final String COL_1 = "ID";
@@ -21,6 +22,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        //create database table
         db.execSQL(" CREATE table " + TABLE_NAME+ "(ID INTEGER PRIMARY KEY AUTOINCREMENT, FirstName TEXT, LastName TEXT, Password TEXT, UserName TEXT)");
     }
 

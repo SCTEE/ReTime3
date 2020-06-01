@@ -2,6 +2,7 @@ package com.example.retime;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +30,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class FacebookLoginActivity extends AppCompatActivity {
 
+    //Variable declaration
     private LoginButton loginButton;
     private CircleImageView circleImageView;
     private TextView txtName, txtEmail;
@@ -40,6 +42,7 @@ public class FacebookLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_facebook_login);
 
+        //get id from view
         loginButton = findViewById(R.id.login_button);
         txtName = findViewById(R.id.profile_name);
         txtEmail = findViewById(R.id.profile_email);
@@ -48,7 +51,7 @@ public class FacebookLoginActivity extends AppCompatActivity {
         callbackManager = CallbackManager.Factory.create();
         loginButton.setReadPermissions(Arrays.asList("email","public_profile"));
         checkLoginStatus();
-
+        //set registercallback for facebook login button
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -88,7 +91,7 @@ public class FacebookLoginActivity extends AppCompatActivity {
                 loadUserProfile(currentAccessToken);
         }
     };
-
+    // load facebook user profile
     private void loadUserProfile(AccessToken newAccessToken)
     {
         GraphRequest request = GraphRequest.newMeRequest(newAccessToken, new GraphRequest.GraphJSONObjectCallback() {
@@ -110,6 +113,16 @@ public class FacebookLoginActivity extends AppCompatActivity {
 
                     Glide.with(FacebookLoginActivity.this).load(image_url).into(circleImageView);
 
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            //Go to home page after 2s
+                            Intent intent = new Intent(FacebookLoginActivity.this, home.class);
+                            startActivity(intent);
+                        }
+                    }, 2000);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -122,6 +135,7 @@ public class FacebookLoginActivity extends AppCompatActivity {
         request.executeAsync();
     }
 
+    //check facebook user login profile status
     private void checkLoginStatus()
     {
         if(AccessToken.getCurrentAccessToken() != null)

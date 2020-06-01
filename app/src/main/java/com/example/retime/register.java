@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class register extends AppCompatActivity {
+    //variable declaration
     SQLiteOpenHelper openHelper;
     SQLiteDatabase db;
     Button _reg_btn;
@@ -22,14 +23,15 @@ public class register extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_page);
-
+        //initialize database helper
         openHelper = new DatabaseHelper(this);
+        //get id from view
         _reg_btn = (Button)findViewById(R.id.reg_btn);
         _user_reg = (EditText)findViewById(R.id.user_reg);
         _fname_reg = (EditText)findViewById(R.id.fname_reg);
         _lname_reg = (EditText)findViewById(R.id.lname_reg);
         _pass_reg = (EditText)findViewById(R.id.pass_reg);
-
+        //set listener to button
         _reg_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -44,6 +46,7 @@ public class register extends AppCompatActivity {
         });
     }
 
+    //insert data to database
     public void insertdata (String fname, String lname, String username, String password) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(DatabaseHelper.COL_2, fname);

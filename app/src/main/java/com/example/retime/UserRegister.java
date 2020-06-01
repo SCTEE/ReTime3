@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 public class UserRegister extends AppCompatActivity {
+    //variable declaration
     SQLiteOpenHelper openHelper;
     SQLiteDatabase db;
     Button _reg_btn;
@@ -21,13 +22,18 @@ public class UserRegister extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_register);
+
+        //initialize database helper variable
         openHelper = new DatabaseHelper(this);
+
+        //get id from view
         _reg_btn = (Button)findViewById(R.id.reg_btn);
         _user_reg = (EditText)findViewById(R.id.user_reg);
         _fname_reg = (EditText)findViewById(R.id.fname_reg);
         _lname_reg = (EditText)findViewById(R.id.lname_reg);
         _pass_reg = (EditText)findViewById(R.id.pass_reg);
 
+        //set button click event
         _reg_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -42,6 +48,7 @@ public class UserRegister extends AppCompatActivity {
         });
     }
 
+    //insert data to database function
     public void insertdata (String fname, String lname, String username, String password) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(DatabaseHelper.COL_2, fname);

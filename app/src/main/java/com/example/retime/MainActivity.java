@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
+    //variable declaration
     SQLiteDatabase db;
     SQLiteOpenHelper openHelper;
      Button _register_btn, _login_btn, _facebook_login_btn;
@@ -32,26 +33,32 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //initialize database helper
         openHelper = new DatabaseHelper(this);
         db = openHelper.getReadableDatabase();
 
+        //get id from view
         _facebook_login_btn = (Button)findViewById(R.id.facebooklogin);
         _register_btn = (Button)findViewById(R.id.register_btn);
         _main_username = (EditText)findViewById(R.id.main_username);
         _main_password = (EditText)findViewById(R.id.main_password);
         _login_btn = (Button)findViewById(R.id.login_btn);
 
+        //set listener to button
         _register_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //go to register page
                 Intent intent = new Intent(MainActivity.this, UserRegister.class);
                 startActivity(intent);
             }
         });
 
+        //set listener to button
         _login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //verify if user account password is correct
                 String username = _main_username.getText().toString();
                 String password = _main_password.getText().toString();
                 cursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.TABLE_NAME + " WHERE " + DatabaseHelper.COL_5 + " =? AND " + DatabaseHelper.COL_4 + " =? ", new String[] {username, password});
@@ -67,10 +74,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //set listener to button
         _facebook_login_btn.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+                //go to facebook login page
                 Intent intent = new Intent(MainActivity.this, FacebookLoginActivity.class);
                 startActivity(intent);
             }

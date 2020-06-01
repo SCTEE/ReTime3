@@ -2,6 +2,7 @@ package com.example.retime;
 
 public class TimeTable {
 
+    //variable declaration
     private int id;
     private String time, task1, task2;
     //Constructor
@@ -12,15 +13,13 @@ public class TimeTable {
         this.task2 = task2;
     }
 
+    //Setter & Getter Methods
     public int getId(){
         return id;
     }
-
     public void setId(int id){
         this.id = id;
     }
-
-    //Setter & Getter Methods
     public String getTime() {
         return time;
     }
@@ -31,7 +30,6 @@ public class TimeTable {
         return task1;
     } //to get company image
     public void setTask1(String task1) { //to set company image
-
         this.task1 = task1;
     }
     public String getTask2() {

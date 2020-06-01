@@ -38,6 +38,7 @@ import java.util.Locale;
 
 public class CalendarTask extends AppCompatActivity {
 
+    //variable declaration
     CalendarView calendar;
     SQLiteDatabase db, db2;
     SQLiteOpenHelper openHelper, openHelper2;
@@ -57,6 +58,7 @@ public class CalendarTask extends AppCompatActivity {
         // hide the title bar
         getSupportActionBar().hide();
         setContentView(R.layout.activity_calendartask);
+        //call notification channel function
         createNotificationChannel();
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "RetimeChannel")
                 .setSmallIcon(R.drawable.calendar)
@@ -64,6 +66,7 @@ public class CalendarTask extends AppCompatActivity {
                 .setContentText("You have a task!")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         NotificationManagerCompat notifimgr = NotificationManagerCompat.from(this);
+        //get id from view and set listener to button
         task = findViewById(R.id.tasks);
         task.setOnClickListener(new TasksOnClickListener());
         savebtn = findViewById(R.id.savebtn);
@@ -79,13 +82,16 @@ public class CalendarTask extends AppCompatActivity {
         openHelper2 = new TaskDatabase(this);
         db2 = openHelper2.getWritableDatabase();
         calendar = findViewById(R.id.calendarView);
+        //get current data with specific format
         today = new SimpleDateFormat("dd/MM/yyyy").format(new Date(calendar.getDate()));
         todayarr = today.split("/");
+        //change day format to 2 decimal
         _dayofmonth = new DecimalFormat("00").format(Integer.parseInt(todayarr[0]));
         _month = todayarr[1];
         _year = todayarr[2];
 
         String todaydate = _dayofmonth.concat(_month).concat(_year);
+        //push notification if there is a task ongoing
         Cursor data = db.rawQuery("Select * From " + CalendarDatabase.TABLE_NAME + " Where " + CalendarDatabase.COL_1 + " = " + todaydate, null);
         if (data.getCount() > 0){
             data.moveToFirst();
@@ -99,6 +105,7 @@ public class CalendarTask extends AppCompatActivity {
             }
         }
 
+        //set on date change listener to calendar
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
@@ -110,6 +117,7 @@ public class CalendarTask extends AppCompatActivity {
                 secondtasket.setText("");
                 secondtimeet.setText("");
                 String todaydate = _dayofmonth.concat(_month).concat(_year);
+                //select data from database when user click on specific date
                 Cursor data = db.rawQuery("Select * From " + CalendarDatabase.TABLE_NAME + " Where " + CalendarDatabase.COL_1 + " = " + todaydate, null);
                 if (data.getCount() > 0){
                     data.moveToFirst();
@@ -122,6 +130,7 @@ public class CalendarTask extends AppCompatActivity {
                 String firsttime = firsttimeet.getText().toString();
                 String secondtask = secondtasket.getText().toString();
                 String secondtime = secondtimeet.getText().toString();
+                //hide delete button if there is no task
                 if (TextUtils.isEmpty(firsttask) && TextUtils.isEmpty(firsttime) && TextUtils.isEmpty(secondtask) && TextUtils.isEmpty(secondtime)){
                     deletebtn.setVisibility(View.INVISIBLE);
                 }
@@ -136,6 +145,7 @@ public class CalendarTask extends AppCompatActivity {
         String secondtask = secondtasket.getText().toString();
         String secondtime = secondtimeet.getText().toString();
 
+        //hide delete button if there is no task
         if (TextUtils.isEmpty(firsttask) && TextUtils.isEmpty(firsttime) && TextUtils.isEmpty(secondtask) && TextUtils.isEmpty(secondtime)){
             deletebtn.setVisibility(View.INVISIBLE);
         }
@@ -145,6 +155,7 @@ public class CalendarTask extends AppCompatActivity {
 
     }
 
+    //create notification channel
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -160,6 +171,7 @@ public class CalendarTask extends AppCompatActivity {
         }
     }
 
+    //insert data function
     public void insertdata (String day, String firsttask, String firsttime, String secondtask, String secondtime) {
 
         ContentValues contentValues = new ContentValues();
@@ -168,6 +180,7 @@ public class CalendarTask extends AppCompatActivity {
         contentValues.put(CalendarDatabase.COL_3, firsttime);
         contentValues.put(CalendarDatabase.COL_4, secondtask);
         contentValues.put(CalendarDatabase.COL_5, secondtime);
+        //insert or update data to calendar database
         long id = db.replace(CalendarDatabase.TABLE_NAME, null, contentValues);
 
         if (!TextUtils.isEmpty(firsttime)) {
@@ -181,6 +194,7 @@ public class CalendarTask extends AppCompatActivity {
         String ID1 = day.concat("/").concat(firsttime);
         String ID2 = day.concat("/").concat(secondtime);
 
+        //insert or update data to task database
         if (firsttime.equals(secondtime)){
             ContentValues contentValues2 = new ContentValues();
             contentValues2.put(TaskDatabase.COL_1, ID1);
@@ -227,7 +241,9 @@ public class CalendarTask extends AppCompatActivity {
         Toast.makeText(this, "save successfully", Toast.LENGTH_LONG).show();
     }
 
+    //delete data function
     public void deletedata (String day, String firsttime, String secondtime) {
+        //delete data from calendar database
         long id = db.delete(CalendarDatabase.TABLE_NAME, CalendarDatabase.COL_1 + " = " + day, null);
         firsttasket.setText("");
         firsttimeet.setText("");
@@ -245,6 +261,7 @@ public class CalendarTask extends AppCompatActivity {
         String ID1 = day.concat("/").concat(firsttime);
         String ID2 = day.concat("/").concat(secondtime);
 
+        //delete data from task database
         if (firsttime.equals(secondtime)){
             id = db2.delete(TaskDatabase.TABLE_NAME, CalendarDatabase.COL_1 + " = '" + ID1 + "'", null);
         }
@@ -256,12 +273,14 @@ public class CalendarTask extends AppCompatActivity {
         Toast.makeText(this, "delete successfully", Toast.LENGTH_LONG).show();
     }
 
+    //implement listener to save button
     private class SaveTaskOnClickListener implements View.OnClickListener{
 
         @Override
         public void onClick(View v) {
             String firsttask = firsttasket.getText().toString();
             String firsttime, secondtime;
+            //set first time variable to blank if the end time is blank
             if (!TextUtils.isEmpty(firsttimeet.getText().toString())){
                 firsttime = Integer.toString(Integer.parseInt(firsttimeet.getText().toString()));
             }
@@ -269,6 +288,7 @@ public class CalendarTask extends AppCompatActivity {
                 firsttime = "";
             }
 
+            //set second time variable to blank if the end time is blank
             String secondtask = secondtasket.getText().toString();
             if (!TextUtils.isEmpty(secondtimeet.getText().toString())){
                 secondtime = Integer.toString(Integer.parseInt(secondtimeet.getText().toString()));
@@ -278,18 +298,22 @@ public class CalendarTask extends AppCompatActivity {
             }
 
             String todaydate = _dayofmonth.concat(_month).concat(_year);
+            //display message if user enter second task without enter the first task
             if(TextUtils.isEmpty(firsttask) && !TextUtils.isEmpty(secondtask)){
                 Toast.makeText(CalendarTask.this, "Please fill in the first task", Toast.LENGTH_LONG).show();
             }
             else {
+                //display message if user enter task details without task name
                 if ((TextUtils.isEmpty(firsttask) && !TextUtils.isEmpty(firsttime)) || TextUtils.isEmpty(secondtask) && !TextUtils.isEmpty(secondtime)) {
                     Toast.makeText(CalendarTask.this, "Please enter task name", Toast.LENGTH_LONG).show();
                 }
                 else {
+                    //display message if the end time is more than 24 hours
                     if ((!TextUtils.isEmpty(firsttask) && (Integer.parseInt(firsttime) > 24 || Integer.parseInt(firsttime) < 1)) || (!TextUtils.isEmpty(secondtask) && (Integer.parseInt(secondtime) > 24 || Integer.parseInt(secondtime) < 1))){
                         Toast.makeText(CalendarTask.this, "Please enter the time between 1 ~ 24", Toast.LENGTH_LONG).show();
                     }
                     else {
+                        //call insert data function
                         insertdata(todaydate, firsttask, firsttime, secondtask, secondtime);
                         if (TextUtils.isEmpty(firsttask) && TextUtils.isEmpty(firsttime) && TextUtils.isEmpty(secondtask) && TextUtils.isEmpty(secondtime)) {
                             deletebtn.setVisibility(View.INVISIBLE);
@@ -303,6 +327,7 @@ public class CalendarTask extends AppCompatActivity {
         }
     }
 
+    //implement listener to delete button
     private class DeleteTaskOnClickListener implements View.OnClickListener{
 
         @Override
@@ -310,14 +335,17 @@ public class CalendarTask extends AppCompatActivity {
             String todaydate = _dayofmonth.concat(_month).concat(_year);
             String firsttime = firsttimeet.getText().toString();
             String secondtime = secondtimeet.getText().toString();
+            //call delte data function
             deletedata(todaydate, firsttime, secondtime);
             deletebtn.setVisibility(View.INVISIBLE);
         }
     }
 
+    //implement listener to task button
     private class TasksOnClickListener implements View.OnClickListener{
         @Override
         public void onClick(View v) {
+            //go to task page
             Intent intent = new Intent(CalendarTask.this, home.class);
             startActivity(intent);
         }
