@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 
 public class UserRegister extends AppCompatActivity {
@@ -28,7 +27,6 @@ public class UserRegister extends AppCompatActivity {
         _fname_reg = (EditText)findViewById(R.id.fname_reg);
         _lname_reg = (EditText)findViewById(R.id.lname_reg);
         _pass_reg = (EditText)findViewById(R.id.pass_reg);
-//        _login_btn = (Button)findViewById(R.id.login_btn);
 
         _reg_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,15 +40,6 @@ public class UserRegister extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "register successfully", Toast.LENGTH_LONG).show();
             }
         });
-
-//        _login_btn.setOnClickListener(new View.OnClickListener() {
-////            @Override
-////            public void onClick(View v) {
-////                //Intent intent = new Intent(MainActivity.this, login.class);
-////                //startActivity(intent);
-////            }
-////        });
-
     }
 
     public void insertdata (String fname, String lname, String username, String password) {
@@ -60,6 +49,5 @@ public class UserRegister extends AppCompatActivity {
         contentValues.put(DatabaseHelper.COL_4, password);
         contentValues.put(DatabaseHelper.COL_5, username);
         long id= db.insert(DatabaseHelper.TABLE_NAME, null, contentValues);
-
     }
 }

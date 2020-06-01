@@ -11,13 +11,9 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
-//import android.app.Fragment;
-
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -48,36 +44,14 @@ public class TimeTableAdapter extends RecyclerView.Adapter<TimeTableAdapter.Time
 
     @Override  // Populating data into the item through holder
     public void onBindViewHolder (TimeTableViewHolder holder, int position )
-    {   // get element from your dataset (Property) at this position
+    {   // get element from dataset (Property) at this position
         // replace the contents of the view with that element
         holder.TimeTableTime.setText(TimeTableList.get(position).getTime());
         holder.TimeTableTask1.setText(TimeTableList.get(position).getTask1());
         holder.TimeTableTask2.setText(TimeTableList.get(position).getTask2());
-//        currenttime = new SimpleDateFormat("kk:mm").format(Calendar.getInstance().getTime());
-//        openHelper = new TaskDatabase(holder.tasklayout.getContext());
-//        db = openHelper.getWritableDatabase();
-//
-//        today = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
-//        todayarr = today.split("/");
-//        _dayofmonth = new DecimalFormat("00").format(Integer.parseInt(todayarr[0]));
-//        _month = todayarr[1];
-//        _year = todayarr[2];
-//
-//        String todaydate = _dayofmonth.concat(_month).concat(_year);
-//        if(currenttime.substring(0,2).equals(new DecimalFormat("00").format(position + 1))){
-//            ID = todaydate.concat("/").concat(Integer.toString(position + 1));
-//            Cursor data = db.rawQuery("Select * From " + TaskDatabase.TABLE_NAME + " Where " + TaskDatabase.COL_1 + " = '" + ID + "' AND " + TaskDatabase.COL_8 + " = '" + todaydate + "' AND " + TaskDatabase.COL_9 + " = " + position, null);
-//            if (data.getCount() > 0){
-//                holder.tasklayout.setBackgroundColor(Color.parseColor("#CF6DF3"));
-//            }
-//            else {
-//                Log.d("blabla", "testing123");
-//                holder.tasklayout.setBackgroundColor(Color.parseColor("#FF9800"));
-//            }
-//        }
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
+    // Return the size of dataset (invoked by the layout manager)
     @Override
     public int getItemCount(){
         return TimeTableList.size();
@@ -102,12 +76,9 @@ public class TimeTableAdapter extends RecyclerView.Adapter<TimeTableAdapter.Time
             view.setOnClickListener(this);
         }
 
-
         @Override
         public void onClick(View v) { //click event
-
             onfragmentlistener.onFragmentClick(getPosition());
-
         }
     }
 

@@ -33,17 +33,13 @@ import java.util.List;
 public class home extends FragmentActivity implements TimeTableAdapter.OnFragmentListener {
     String[] TimeList = { "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00", "24:00"};
 
-
     RecyclerView TimeTableRecycleView;
     TimeTableAdapter TimeTableAdapter;
     SQLiteOpenHelper openHelper;
     SQLiteDatabase db;
-
     ImageButton Calendars, Tasks;
-
     String currenttime, today, _year, _month, _dayofmonth, ID, endcontent = "";
     String[] todayarr;
-
 
     List<com.example.retime.TimeTable> TimeTableList = new ArrayList<>();
 
@@ -53,7 +49,7 @@ public class home extends FragmentActivity implements TimeTableAdapter.OnFragmen
         setContentView(R.layout.activity_home);
         createNotificationChannel();
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "RetimeChannel")
-                .setSmallIcon(R.drawable.smallcalendar)
+                .setSmallIcon(R.drawable.calendar)
                 .setContentTitle("Retime Task")
                 .setContentText("You have a task!")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
@@ -81,11 +77,10 @@ public class home extends FragmentActivity implements TimeTableAdapter.OnFragmen
         currenttime = new SimpleDateFormat("kk:mm").format(Calendar.getInstance().getTime());
         String todaydate = _dayofmonth.concat(_month).concat(_year);
         long id = db.delete(TaskDatabase.TABLE_NAME, TaskDatabase.COL_8 + " < '" + todaydate + "'", null);
-        //Filling our recycler view list
+        //Filling out recycler view list
         for (int i= 0; i< TimeList.length; i++ )
         { String time = TimeList[i];
             ID = todaydate.concat("/").concat(Integer.toString(i));
-//            Log.d("blabla", "Select * From " + TaskDatabase.TABLE_NAME + " Where (" + TaskDatabase.COL_1 + " = '" + ID + "' AND " + TaskDatabase.COL_8 + " = '" + todaydate + "' AND " + TaskDatabase.COL_9 + " = " + i + ")");
             Cursor data = db.rawQuery("Select * From " + TaskDatabase.TABLE_NAME + " Where " + TaskDatabase.COL_1 + " = '" + ID + "' AND " + TaskDatabase.COL_8 + " = '" + todaydate + "' AND " + TaskDatabase.COL_9 + " = " + i, null);
             if (data.getCount() > 0){
                 data.moveToFirst();
@@ -131,7 +126,7 @@ public class home extends FragmentActivity implements TimeTableAdapter.OnFragmen
             endcontent = endcontent.concat(" is/are over.");
 
             NotificationCompat.Builder builder2 = new NotificationCompat.Builder(this, "RetimeChannel")
-                    .setSmallIcon(R.drawable.smallcalendar)
+                    .setSmallIcon(R.drawable.calendar)
                     .setContentTitle("Retime Task")
                     .setContentText(endcontent)
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT);
@@ -141,16 +136,14 @@ public class home extends FragmentActivity implements TimeTableAdapter.OnFragmen
     }
 
     private void createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
+        // Create the NotificationChannel, but only on API 26+ because the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Channel Name";
             String description = "Channel Description";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel("RetimeChannel", name, importance);
             channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
+            // Register the channel with the system
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
 
             notificationManager.createNotificationChannel(channel);
@@ -169,13 +162,12 @@ public class home extends FragmentActivity implements TimeTableAdapter.OnFragmen
 
         @Override
         public void onClick(View v) {
-//            notifimgr.notify(10, builder.build());
         }
     }
 
     public void onFragmentClick(int position) {
-
-        Fragment Taskfrag = new Task(); //Declare a dynamic fragment variable
+        //Declare a dynamic fragment variable
+        Fragment Taskfrag = new Task();
         SharedPreferences prefs = getSharedPreferences("MyTask", MODE_PRIVATE);
         //declare share preference editor
         SharedPreferences.Editor editor = prefs.edit();
@@ -187,11 +179,14 @@ public class home extends FragmentActivity implements TimeTableAdapter.OnFragmen
         editor.apply();
         editor.commit();
 
-        FragmentManager TaskfragmentManager = getSupportFragmentManager(); //declare a fragment manager
-        FragmentTransaction TaskfragmentTransaction = TaskfragmentManager.beginTransaction(); //declare a fragment transaction
-//        TaskfragmentTransaction.replace(R.id.TaskLayout,Taskfrag, "TaskFragment").addToBackStack(null); //replace the fragment that user is selected to the screen and add to back stack
-        TaskfragmentTransaction.replace(R.id.TaskLayout,Taskfrag, "TaskFragment");//.addToBackStack(null); //replace the fragment that user is selected to the screen and add to back stack
-        TaskfragmentTransaction.commit(); //commit the changes of the fragment transaction
+        //declare a fragment manager
+        FragmentManager TaskfragmentManager = getSupportFragmentManager();
+        //declare a fragment transaction
+        FragmentTransaction TaskfragmentTransaction = TaskfragmentManager.beginTransaction();
+        //replace the fragment that user is selected to the screen and add to back stack
+        TaskfragmentTransaction.replace(R.id.TaskLayout,Taskfrag, "TaskFragment");
+        //commit the changes of the fragment transaction
+        TaskfragmentTransaction.commit();
         TimeTableRecycleView.setVisibility(View.INVISIBLE);
 
     }

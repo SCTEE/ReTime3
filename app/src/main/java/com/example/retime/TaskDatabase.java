@@ -22,7 +22,6 @@ public class TaskDatabase extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-//        db.execSQL(" CREATE table " + TABLE_NAME+ "(ID INTEGER PRIMARY KEY AUTOINCREMENT, FirstTask TEXT, FirstBreak TEXT, FirstGoal TEXT, SecondTask TEXT, SecondBreak TEXT, SecondGoal TEXT)");
         db.execSQL(" CREATE table " + TABLE_NAME+ "(ID TEXT PRIMARY KEY, FirstTask TEXT, FirstEndTime TEXT, FirstGoal TEXT, SecondTask TEXT, SecondEndTime TEXT, SecondGoal TEXT, Date TEXT, Position INTEGER)");
     }
 

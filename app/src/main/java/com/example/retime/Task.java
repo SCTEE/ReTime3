@@ -27,18 +27,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link Task#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class Task extends Fragment implements View.OnClickListener{
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    // the fragment initialization parameters
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -58,15 +50,6 @@ public class Task extends Fragment implements View.OnClickListener{
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Task.
-     */
-    // TODO: Rename and change types and number of parameters
     public static Task newInstance(String param1, String param2) {
         Task fragment = new Task();
         Bundle args = new Bundle();
@@ -138,13 +121,8 @@ public class Task extends Fragment implements View.OnClickListener{
         if (data.getCount() > 0){
             data.moveToFirst();
             tasket1.setText(data.getString(1));
-//            if (position == 23){
-//                endtimeet1.setEnabled(false);
-//                endtimeet2.setEnabled(false);
-//            }
             endtimeet1.setText(data.getString(2));
             goalet1.setText(data.getString(3));
-            Log.d("blabla", Integer.toString(data.getString(4).length()));
             if (data.getString(4).length() != 0 || data.getString(5).length() != 0 || data.getString(6).length() != 0){
                 AddTask.setVisibility(View.INVISIBLE);
                 tasket2.setText(data.getString(4));
@@ -252,7 +230,6 @@ public class Task extends Fragment implements View.OnClickListener{
                 }
                 break;
             case R.id.deletebtn:
-//                Log.d("blabla", "Select * From " + CalendarDatabase.TABLE_NAME + " Where " + CalendarDatabase.COL_1 + " = " + todaydate + " AND " + CalendarDatabase.COL_3 + " = '" + (position-1) + "' OR " + CalendarDatabase.COL_5 + " = '" + (position-1) +"'");
                 Cursor data = db2.rawQuery("Select * From " + CalendarDatabase.TABLE_NAME + " Where " + CalendarDatabase.COL_1 + " = " + todaydate + " AND (" + CalendarDatabase.COL_3 + " = '" + (position+1) + "' OR " + CalendarDatabase.COL_5 + " = '" + (position+1) +"')", null);
                 if (data.getCount() > 0){
                     Toast.makeText(getActivity(), "Please delete from calendar", Toast.LENGTH_LONG).show();

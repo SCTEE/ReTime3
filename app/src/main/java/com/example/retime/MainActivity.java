@@ -22,15 +22,11 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-
     SQLiteDatabase db;
     SQLiteOpenHelper openHelper;
      Button _register_btn, _login_btn, _facebook_login_btn;
      EditText _main_password, _main_username;
      Cursor cursor;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String username = _main_username.getText().toString();
                 String password = _main_password.getText().toString();
-                //cursor = db.rawQuery("SELECT * FROM " +DatabaseHelper.TABLE_NAME+ "WHERE" + DatabaseHelper.COL_5 + DatabaseHelper.COL_4, new String[] {username, password});
                 cursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.TABLE_NAME + " WHERE " + DatabaseHelper.COL_5 + " =? AND " + DatabaseHelper.COL_4 + " =? ", new String[] {username, password});
                 if (cursor!=null){
                     if(cursor.getCount() > 0){
@@ -69,9 +64,6 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "error", Toast.LENGTH_LONG).show();
                     }
                 }
-
-               // Intent intent = new Intent(MainActivity.this, login.class);
-               // startActivity(intent);
             }
         });
 
